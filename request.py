@@ -1,4 +1,5 @@
-def generate_description(input):
+
+def queryai(input):
     messages = [
         {"role":"system",
          "content":""" As a product description generator, generate a multiparagraph rich text product descrition with emojeis from the info provided to you '\n"""},
