@@ -1,7 +1,11 @@
 from typing import Union
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+import openai
+import os
 
+# Set up your OpenAI API key
+openai.api_key = "YOUR_OPENAI_API_KEY"
 
 app = FastAPI()
 
