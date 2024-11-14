@@ -26,6 +26,13 @@ Resources
 https://www.youtube.com/watch?v=KVdP4SpWcc4&ab_channel=PradipNichite
 
 
+Testing
+
+curl -X POST "http://localhost:8000/chat" \
+-H "Content-Type: application/json" \
+-d '{"prompt": "Explain blockchain technology", "max_tokens": 100, "temperature": 0.7}'
+
+
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a id="readme-top"></a>
 <!--

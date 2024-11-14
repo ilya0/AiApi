@@ -3,20 +3,19 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import openai
 import os
+import logging
 from dotenv import load_dotenv
 
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.g
 
 # Set up your OpenAI API key
 openai.api_key = "YOUR_OPENAI_API_KEY"
 
 #intial fast api
 app = FastAPI()
-
-# Define a Pydantic model for request data
-class ChatRequest(BaseModel):
-    prompt: str
-    max_tokens: int = 150
-    temperature: float = 0.7
 
 
 #test items array
@@ -41,17 +40,21 @@ def get_item(item_id: int) -> str:
         raise HTTPException(status_code=404, detail="Item not found")
     
 
-
+# Define a Pydantic model for the request
+class ChatRequest(BaseModel):
+    prompt: str
+    max_tokens: int = 150
+    temperature: float = 0.7
 
 @app.post("/chat")
 async def chat_with_openai(request: ChatRequest):
     """
-    Endpoint to interact with OpenAI's GPT model.
+    Endpoint to interact with OpenAI's ChatGPT model using the latest API.
     """
     try:
-        # Use the latest ChatCompletion API
+        # Use the latest OpenAI ChatCompletion API
         response = openai.ChatCompletion.create(
-            model="gpt-4",  # or "gpt-3.5-turbo"
+            model="gpt-4-turbo",  # or "gpt-3.5-turbo"
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": request.prompt}
@@ -59,12 +62,14 @@ async def chat_with_openai(request: ChatRequest):
             max_tokens=request.max_tokens,
             temperature=request.temperature
         )
-
+        
         # Extract the response content
-        chat_response = response.choices[0].message['content'].strip()
+        chat_response = response.choices[0].message['content']
         return {"response": chat_response}
 
     except openai.error.OpenAIError as e:
-        raise HTTPException(status_code=500, detail=f"OpenAI API error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"OpenAI API error: {e}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {e}")
 
 # Run the FastAPI server using: uvicorn main:app --reload
