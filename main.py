@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import openai
 import os
+from dotenv import load_dotenv
 
 
 # Set up your OpenAI API key
@@ -11,11 +12,14 @@ openai.api_key = "YOUR_OPENAI_API_KEY"
 #intial fast api
 app = FastAPI()
 
-# Define a Pydantic model to handle the request body
+# Define a Pydantic model for request data
 class ChatRequest(BaseModel):
     prompt: str
-    max_tokens: int = 100
+    max_tokens: int = 150
+    temperature: float = 0.7
 
+
+#test items array
 items = []
 
 ##get route to create items
@@ -37,23 +41,30 @@ def get_item(item_id: int) -> str:
         raise HTTPException(status_code=404, detail="Item not found")
     
 
-# Endpoint to interact with ChatGPT
+
+
 @app.post("/chat")
-async def chat_with_gpt(request: ChatRequest):
+async def chat_with_openai(request: ChatRequest):
+    """
+    Endpoint to interact with OpenAI's GPT model.
+    """
     try:
-        # Send a request to OpenAI's ChatGPT model
+        # Use the latest ChatCompletion API
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",  # or "gpt-3.5-turbo"
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": request.prompt}
             ],
             max_tokens=request.max_tokens,
-            temperature=0.7
+            temperature=request.temperature
         )
-        # Extract the response text
-        message = response['choices'][0]['message']['content']
-        return {"response": message}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
+        # Extract the response content
+        chat_response = response.choices[0].message['content'].strip()
+        return {"response": chat_response}
+
+    except openai.error.OpenAIError as e:
+        raise HTTPException(status_code=500, detail=f"OpenAI API error: {str(e)}")
+
+# Run the FastAPI server using: uvicorn main:app --reload
