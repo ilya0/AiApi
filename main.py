@@ -1,18 +1,28 @@
 from typing import Union
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import openai
+from openai import OpenAI
 import os
-import logging
 from dotenv import load_dotenv
+import logging
 
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
-logger = logging.g
+logger = logging.getLogger(__name__)
 
-# Set up your OpenAI API key
-openai.api_key = "YOUR_OPENAI_API_KEY"
+
+
+# Load environment variables from .env file
+load_dotenv()
+
+client = OpenAI(
+   api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
+)
+
+Check if the API key is loaded correctly
+if not openai.api_key:
+    logger.error("OpenAI API key not found. Make sure it's set in the .env file.")
 
 #intial fast api
 app = FastAPI()
@@ -40,7 +50,6 @@ def get_item(item_id: int) -> str:
         raise HTTPException(status_code=404, detail="Item not found")
     
 
-# Define a Pydantic model for the request
 class ChatRequest(BaseModel):
     prompt: str
     max_tokens: int = 150
@@ -49,27 +58,29 @@ class ChatRequest(BaseModel):
 @app.post("/chat")
 async def chat_with_openai(request: ChatRequest):
     """
-    Endpoint to interact with OpenAI's ChatGPT model using the latest API.
+    Endpoint to interact with OpenAI's ChatGPT model using the new API.
     """
+    logger.info(f"Received prompt: {request.prompt}")
+    
     try:
-        # Use the latest OpenAI ChatCompletion API
-        response = openai.ChatCompletion.create(
-            model="gpt-4-turbo",  # or "gpt-3.5-turbo"
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": request.prompt}
-            ],
+        # Using the latest OpenAI API for completions
+        response = openai.ChatCompletions.create(
+            model="gpt-4-turbo",
+            prompt=request.prompt,
             max_tokens=request.max_tokens,
             temperature=request.temperature
         )
         
         # Extract the response content
-        chat_response = response.choices[0].message['content']
+        chat_response = response['choices'][0]['text'].strip()
+        logger.info(f"Response: {chat_response}")
         return {"response": chat_response}
 
-    except openai.error.OpenAIError as e:
-        raise HTTPException(status_code=500, detail=f"OpenAI API error: {e}")
+    except openai.OpenAIError as e:
+        logger.error(f"OpenAI API error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"OpenAI API error: {str(e)}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Unexpected error: {e}")
+        logger.error(f"Unexpected error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
 # Run the FastAPI server using: uvicorn main:app --reload
