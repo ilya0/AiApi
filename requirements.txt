@@ -3,3 +3,5 @@ Uvicorn
 openai
 pydantic
 python-doenv
+
+#requirements file to load all the pluggins
