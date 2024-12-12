@@ -11,8 +11,6 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
-
 # Load environment variables from .env file
 load_dotenv()
 
@@ -20,7 +18,7 @@ client = OpenAI(
    api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
 )
 
-Check if the API key is loaded correctly
+#Check if the API key is loaded correctly
 if not openai.api_key:
     logger.error("OpenAI API key not found. Make sure it's set in the .env file.")
 
@@ -31,12 +29,12 @@ app = FastAPI()
 #test items array
 items = []
 
-##get route to create items
+##get route to create items (intial api test)
 @app.get("/")
 def read_root():
     return {" Welcome to AiAPi"}
 
-##post route create items
+##post route create items (intial api test)
 @app.post("/items")
 def create_item(item: str):
     items.append(item)
@@ -49,12 +47,13 @@ def get_item(item_id: int) -> str:
     else:
         raise HTTPException(status_code=404, detail="Item not found")
     
-
+#setting intial vars for ChatGPT
 class ChatRequest(BaseModel):
     prompt: str
     max_tokens: int = 150
     temperature: float = 0.7
 
+#chat gpt connection
 @app.post("/chat")
 async def chat_with_openai(request: ChatRequest):
     """

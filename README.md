@@ -10,6 +10,7 @@ source <DIR>/bin/activate
 4. Installed packages
    1. pip install uvicorn
    2. pip install fastapi
+   3. pip install langchain
 
 Requirements install
 pip install -r ./requirements.txt
@@ -17,9 +18,15 @@ pip install -r ./requirements.txt
 2. Uvicorn
 3. openai
 4. pydantic
+5. langchain
+
+Installing 
+pip install fastapi["all"]
 
 Running python app
-source ~/code/AiAPi/bin/activate
+Init ENV but running
+  source ~/code/AiAPi/bin/activate
+Then run uvicorn in the env for continuous reload
 uvicorn main:app --reload
 
 Resources
