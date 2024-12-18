@@ -1,5 +1,9 @@
 # AiApi
 
+Status:
+I revised the code using CHATGPT
+getting a 1.0.0 chat completion not used error when curl post
+
 
 What I have done:
 1. install pythin
@@ -20,21 +24,20 @@ pip install -r ./requirements.txt
 4. pydantic
 5. langchain
 
-Installing 
-pip install fastapi["all"]
+
 
 
 
 
 Resources
 https://www.youtube.com/watch?v=KVdP4SpWcc4&ab_channel=PradipNichite
+https://www.youtube.com/watch?v=q5HiD5PNuck&ab_channel=TechWithTim
 
 
 Testing
 search for api key to double check git grep "your_api_key_here"
 
 Running the App
-
 
 cd source ~/code/AiAPi/bin/activate
 source activate
