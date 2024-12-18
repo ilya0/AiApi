@@ -1,12 +1,16 @@
+import logging
+import constants
+import openai
+import os
+import sys
+import dotenv
+
+from openai import OpenAI
 from typing import Union
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from openai import OpenAI
-import os
-import sys
 from dotenv import load_dotenv
-import logging
-import constants
+
 
 
 # Set up logging
@@ -16,9 +20,7 @@ logger = logging.getLogger(__name__)
 # Load environment variables from .env file
 load_dotenv()
 
-client = OpenAI(
-   api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
-)
+openai.api_key = os.environ.get("OPENAI_API_KEY") #running openai
 
 #Check if the API key is loaded correctly
 if not openai.api_key:

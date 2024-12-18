@@ -23,11 +23,8 @@ pip install -r ./requirements.txt
 Installing 
 pip install fastapi["all"]
 
-Running python app
-Init ENV but running
-  source ~/code/AiAPi/bin/activate
-Then run uvicorn in the env for continuous reload
-uvicorn main:app --reload
+
+
 
 Resources
 https://www.youtube.com/watch?v=KVdP4SpWcc4&ab_channel=PradipNichite
@@ -37,6 +34,13 @@ Testing
 search for api key to double check git grep "your_api_key_here"
 
 Running the App
+
+
+cd source ~/code/AiAPi/bin/activate
+source activate
+uvicorn main:app --reload
+
+
 curl -X POST "http://localhost:8000/chat" \
 -H "Content-Type: application/json" \
 -d '{"prompt": "Explain blockchain technology", "max_tokens": 100, "temperature": 0.7}'
