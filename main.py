@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 client = OpenAI(
-   api_key=os.environ.get(""),  # This is the default and can be omitted
+   api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
 )
 
 #Check if the API key is loaded correctly

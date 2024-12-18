@@ -34,7 +34,9 @@ https://www.youtube.com/watch?v=KVdP4SpWcc4&ab_channel=PradipNichite
 
 
 Testing
+search for api key to double check git grep "your_api_key_here"
 
+Running the App
 curl -X POST "http://localhost:8000/chat" \
 -H "Content-Type: application/json" \
 -d '{"prompt": "Explain blockchain technology", "max_tokens": 100, "temperature": 0.7}'
