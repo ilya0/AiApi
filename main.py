@@ -1,5 +1,4 @@
 import logging
-import constants
 import openai
 import os
 import sys
@@ -86,4 +85,3 @@ async def chat_with_openai(request: ChatRequest):
         logger.error(f"Unexpected error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
-# Run the FastAPI server using: uvicorn main:app --reload
